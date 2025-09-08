@@ -1,176 +1,191 @@
 <?php require('layout/header.php') ?>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Về Coffee Shop</title>
-    <!-- Thêm Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-</head>
 
-<body>
+<main style="padding-top: 0px;">
     <!-- Section About Us -->
     <section class="about-us">
         <div class="overlay">
-            <h3>Về Coffee Shop</h3>
-            <h6>Chào mừng bạn đến với website chính thức của Coffee Shop! Đây là nơi chúng tôi mang đến cho bạn trải nghiệm thưởng thức cà phê và đồ uống tuyệt hảo cùng với không gian thư giãn đậm chất riêng. Hãy khám phá thực đơn đa dạng và dịch vụ tiện ích mà chúng tôi cung cấp!</h6>
+            <h3>COMPANY PROFILE</h3>
         </div>
     </section>
 
+    <!-- Service -->
     <div class="service">
-        <h4>SINCE 2025</h4>
+        <h4>WHAT WE STAND FOR</h4>
     </div>
 
-    <!-- New Section with Image and Description -->
+    <!-- About Details -->
     <section class="about-details">
         <div class="container">
-            <!-- Left Side: Description about Coffee Shop -->
+            <!-- Left -->
             <div class="description">
-                <h5>Thực đơn và Dịch vụ</h5>
-                <p>Thực đơn đồ uống phong phú, từ cà phê nguyên chất đến các loại trà, sinh tố và bánh ngọt.</p>
-                <p>Dịch vụ đặt hàng trực tuyến, giao hàng tận nơi nhanh chóng.</p>
-                <p>Không gian quán phù hợp để làm việc, gặp gỡ bạn bè hoặc tổ chức sự kiện nhỏ.</p>
+                <h5>Togetherness</h5>
+                <p>We are guided by PEER: Proactive, Enthusiasm, <br>Equality, Respect.</p>
+                <p>We believe in mutual appreciation and shared <br> inspiration.</p>
+                <p>We foster connection through tea.</p>
             </div>
-            <div class="image-center">
-            <img src="https://demo.htmlcodex.com/1528/coffee-shop-html-template/img/about.png" alt="About Coffee Shop Image">
-        </div>
-            <!-- Right Side: Vision and Mission -->
+
+            <!-- Center -->
+            <div class="desc-center">
+                <h5>Sincerity</h5>
+                <p>We are transparent in all aspects and treat every <br>interaction genuinely.</p>
+            </div>
+
+            <!-- Right -->
             <div class="vision">
-                <h5>Tầm nhìn và Sứ mệnh</h5>
-                <p>Chúng tôi không chỉ phục vụ đồ uống mà còn lan tỏa giá trị của sự gắn kết, niềm vui và cảm giác thân thuộc. Coffee Shop hướng tới trở thành điểm đến lý tưởng để bạn tận hưởng những khoảnh khắc đáng nhớ bên bạn bè và gia đình.</p>
+                <h5>Integrity</h5>
+                <p>We uphold integrity in all we do, guided by <br>strong moral principles and unwavering ethics.</p>
+                <p>We do what’s right, and we do it right.</p>
             </div>
         </div>
-
-        <!-- Image at the center -->
-        
     </section>
-</body>
-</html>
-
-<?php require('layout/footer.php') ?>
+    <section class="our-goal">
+        <div class="goal-content">
+            <h2>OUR GOAL</h2>
+            <p>
+                To serve tea lovers in 100 countries,<br>
+                generate 300,000 employment opportunities worldwide,<br>
+                and deliver 15 billion cups of freshly brewed tea annually.
+            </p>
+        </div>
+    </section>
+</main>
 <style>
- /* Định dạng chung cho các phần tử */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    /* Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-body {
-    font-family: Arial, sans-serif;
-}
+    body {
+        font-family: Arial, sans-serif;
+    }
 
-/* Định dạng cho phần About Us */
-.about-us {
-    position: relative;
-    width: 100%;
-    height: 100vh;  /* Full màn hình */
-    background-image: url('https://hoanghamobile.com/tin-tuc/wp-content/webp-express/webp-images/uploads/2024/08/anh-cafe.jpg.webp');
-    background-size: cover;
-    background-position: center;
-    margin-top: 8%;
-}
+    /* Banner About */
+    .about-us {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        background-image: url('/Chagge_Store/images/bg/bg-about-1.png');
+        background-size: cover;
+        background-position: center;
 
-.about-us .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);  /* Màu đen mờ */
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 20px;
-}
+    }
 
-.about-us h3 {
-    font-size: 36px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    font-family: 'Pacifico', cursive;
-}
+    .about-us .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 20px;
+        padding-top: 0px;
+    }
 
-.about-us h6 {
-    font-size: 18px;
-    max-width: 800px;
-    line-height: 1.6;
-    color: burlywood;
-}
+    .about-us h3 {
+        font-size: 52px;
+        margin-bottom: 20px;
+        font-family: 'Arial', cursive;
+        align-items: left;
+        padding-left: 100px;
+        padding-bottom: 40px;
+        letter-spacing: 3px;
+        font-weight: bold;
+    }
 
-.service h4 {
-    font-weight: bold;
-    font-size: 40px;
-    color: brown;
-    margin-top: 15%;
-    text-align: center;
-}
+    .about-us h6 {
+        font-size: 18px;
+        max-width: 800px;
+        line-height: 1.6;
+        color: burlywood;
+    }
 
-/* Section về chi tiết Coffee Shop */
-.about-details {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 50px 0;
-    padding: 0 20px;
-}
-
-/* Mô tả về quán (bên trái) */
-.description {
-    width: 30%;
-}
-
-.description h5 {
-    font-size: 37px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: brown;
-}
-
-.description p {
-    font-size: 16px;
-    color: black;
-    font-weight: 200;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
-/* Tầm nhìn và sứ mệnh (bên phải) */
-.vision {
-    width: 30%;
-}
-.container{
-    display: flex;
-    margin-top:10px;
-}
-.vision h5 {
-    font-size: 37px;
-    font-weight: bold;
-    line-height: 1.6;
-    margin-bottom: 10px;
-    color: brown;
-}
-
-.vision p {
-    font-size: 16px;
-    color: black;
-    font-weight: 200;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
-/* Hình ảnh nằm giữa 2 phần */
-.image-center {
-    text-align: center;
-    width: 30%;
-}
-
-.image-center img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 10px;
-}
-
+    /* Service */
+    .service h4 {
+        font-size: 40px;
+        font-weight: bold;
+        color: brown;
+        margin: 50px 0;
+        text-align: center;
+    }
 </style>
+<style>
+    /* Our Goal */
+    .our-goal {
+        position: relative;
+        width: 100%;
+        height: 90vh;
+        /* chiếm toàn màn hình */
+        background: url('/Chagge_Store/images/bg/bg-our-goal.jpeg')no-repeat center center/cover;
+        display: flex;
+        align-items: center;
+        /* căn giữa theo chiều dọc */
+    }
+
+    .goal-content {
+        color: white;
+        max-width: 600px;
+        margin-left: 10vw;
+        /* cách lề trái */
+        line-height: 2.3;
+    }
+
+    .goal-content h2 {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .goal-content p {
+        font-size: 16px;
+        color: white;
+        font-weight: normal;
+    }
+
+
+    /* About Details */
+    .about-details .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 30px;
+        padding: 0 50px;
+        font-family: sans-serif;
+    }
+
+    .description,
+    .vision,
+    .desc-center {
+        flex: 1;
+        text-align: center;
+    }
+
+    .description h5,
+    .vision h5,
+    .desc-center h5 {
+        font-size: 23px;
+        margin-bottom: 15px;
+        color: #011E41;
+    }
+
+    .description p,
+    .vision p,
+    .desc-center p {
+        font-size: 16px;
+        line-height: 2.3;
+        color: #5f6464;
+        font-weight: normal;
+    }
+
+    .image-center img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+</style>
+<?php require('layout/footer.php') ?>

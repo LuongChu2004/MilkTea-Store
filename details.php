@@ -27,12 +27,6 @@ if (isset($_GET['id'])) {
         die();
     }
 
-//nếu là tra sưa sẽ hiển thị đá và đường
-$is_trasua = false;
-
-if ($product && isset($product['id_category']) && $product['id_category'] == 1) {
-    $is_trasua = true;
-}
     // Use prepared statement for sizes query
     $sqlSizes = 'SELECT size, price FROM product_size WHERE product_id = ?';
     $sizes = executeResult($sqlSizes, [$id]);
@@ -44,17 +38,62 @@ if ($product && isset($product['id_category']) && $product['id_category'] == 1) 
     src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v11.0&appId=264339598396676&autoLogAppEvents=1"
     nonce="8sTfFiF4"></script>
 <!-- END HEADR -->
-<main class="py-4">
+<main style="padding-top: 15vh !important;">
+    <style>
+        /* thanh tìm kiếm  */
+        .search-box {
+            max-width: 1000px;
+            /* Giới hạn chiều rộng */
+            border-radius: 50px;
+            overflow: hidden;
+            /* Để bo góc liền khối */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-box .input-group-text {
+            background-color: #fff;
+            border: none;
+            padding-left: 15px;
+        }
+
+        .search-box input {
+            border: none;
+            box-shadow: none;
+            padding-left: 10px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        .search-box .btn {
+            border: none;
+            border-radius: 0;
+            padding: 8px 20px;
+            background: linear-gradient(90deg, #ff7b54, #ff6b6b);
+            /* Màu gradient */
+            transition: 0.3s;
+        }
+
+        .search-box .btn:hover {
+            background: linear-gradient(90deg, #ff6b6b, #ff7b54);
+        }
+    </style>
     <!-- Search Section -->
     <div class="container mb-4">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-search"></i></span>
-                    </div>
-                    <form action="thucdon.php" method="GET" class="w-100">
-                        <input name="search" type="text" class="form-control" placeholder="Tìm món hoặc thức ăn">
+        <div class="row justify-content-center my-0">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="search-quan">
+                    <form action="thucdon.php" method="GET" class="position-relative">
+                        <div class="input-group search-box">
+                            <span class="input-group-text bg-white border-end-0">
+                                <i class="fas fa-search text-muted"></i>
+                            </span>
+                            <input name="search" type="text" class="form-control border-start-0 ps-0"
+                                placeholder="Tìm món hoặc thức ăn...">
+                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -97,7 +136,6 @@ if ($product && isset($product['id_category']) && $product['id_category'] == 1) 
                                     </div>
                                 </div>
                                 <!-- Chỉ hiển thị đá và đường nếu là Trà sữa -->
-                                <?php if ($is_trasua): ?>
                                     <div class="row mt-4">
                                         <div class="col-md-6 mb-3">
                                             <label for="ice_level" class="form-label fw-semibold">
@@ -124,7 +162,6 @@ if ($product && isset($product['id_category']) && $product['id_category'] == 1) 
                                         </div>
                                     </div>
                                 
-                                <?php endif; ?>
                                 <!-- Quantity -->
                                 <div class="mb-3">
                                     <label for="quantity" class="form-label">Số lượng:</label>
@@ -159,7 +196,9 @@ if ($product && isset($product['id_category']) && $product['id_category'] == 1) 
 
                 <!-- Facebook Comments -->
                 <div class="card">
-                    <div class="card-body">
+                    <h3 style="text-align: center; padding-top: 20px;">Đánh Giá</h3>
+                    <div class="card-body" style="margin-top:20px;">
+                        
                         <div class="fb-comments" data-href="http://localhost/PROJECT/details.php" data-width="100%"
                             data-numposts="5"></div>
                     </div>
@@ -170,7 +209,7 @@ if ($product && isset($product['id_category']) && $product['id_category'] == 1) 
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0">Gợi ý cho bạn</h5>
+                        <h3 class="mb-0">Gợi ý cho bạn</h3>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -185,27 +224,26 @@ if ($product && isset($product['id_category']) && $product['id_category'] == 1) 
                             LEFT JOIN product_size ON product.id = product_size.product_id 
                             WHERE product.id != ?
                             GROUP BY product.id
-                            LIMIT 6";
+                            LIMIT 4";
 
                             $productList = executeResult($sql, [$id]);
                             foreach ($productList as $item) {
-                                echo '
-                                <div class="col-6 col-lg-12 mb-3">
-                                    <div class="card h-100">
-                                        <a href="details.php?id=' . $item['id'] . '" class="text-decoration-none">
-                                            <img src="admin/product/' . $item['thumbnail'] . '" 
-                                                 class="card-img-top" alt="' . $item['title'] . '" 
-                                                 style="height: 120px; object-fit: cover;">
-                                            <div class="card-body p-2">
-                                                <h6 class="card-title text-dark">' . $item['title'] . '</h6>
-                                                <p class="card-text text-muted small">
-                                                    Giá: ' . number_format($item['price'], 0, ',', '.') . ' VNĐ
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>';
-                            }
+    echo '
+    <div class="col-6 col-lg-12 mb-3">
+        <div class="card h-100 product-card"
+             style="background-image: url(\'admin/product/' . $item['thumbnail'] . '\');">
+            <a href="details.php?id=' . $item['id'] . '" class="overlay-link">
+                <div class="overlay"></div>
+                <div class="card-body p-3 text-white">
+                    <h6 class="card-title fw-bold">' . $item['title'] . '</h6>
+                    <p class="card-text small mb-0">
+                        Giá: ' . number_format($item['price'], 0, ',', '.') . ' VNĐ
+                    </p>
+                </div>
+            </a>
+        </div>
+    </div>';
+}
                             ?>
                         </div>
                     </div>
@@ -355,4 +393,271 @@ function addToCart(id) {
             margin-bottom: 0.5rem;
         }
     }
+</style>
+<style>
+    /* RESET & BASE ----------------------------------*/
+body {
+  font-family: "Roboto", "Helvetica", sans-serif;
+  background: #fafafa;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* HEADER ----------------------------------------*/
+.navbar {
+  background: linear-gradient(90deg, #ebe6e6ff, #ff7b54);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* SEARCH BOX ------------------------------------*/
+.search-box {
+  max-width: 800px;
+  border-radius: 50px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  background: #fff;
+  transition: transform 0.3s ease;
+}
+
+.search-box:hover {
+  transform: translateY(-2px);
+}
+
+.search-box .input-group-text {
+  background: transparent;
+  border: none;
+  padding-left: 18px;
+  font-size: 1.2rem;
+  color: #ff6b6b;
+}
+
+.search-box input {
+  border: none;
+  box-shadow: none;
+  padding: 10px 14px;
+}
+
+.search-box input:focus {
+  outline: none;
+}
+
+.search-box .btn {
+  border: none;
+  background: linear-gradient(90deg, #ff7b54, #ff6b6b);
+  color: #fff;
+  padding: 10px 24px;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.search-box .btn:hover {
+  background: linear-gradient(90deg, #ff6b6b, #ff7b54);
+}
+
+/* PRODUCT CARD ----------------------------------*/
+.card {
+  border: none;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.card-title {
+  font-weight: 600;
+  color: #444;
+}
+
+/* PRICE -----------------------------------------*/
+#price-display {
+  color: #e74c3c;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+/* SIZE BUTTONS ----------------------------------*/
+.btn-check:checked + .btn-outline-primary {
+  background: #ff6b6b;
+  border-color: #ff6b6b;
+  color: #fff;
+}
+
+.btn-outline-primary {
+  border-color: #ddd;
+  color: #333;
+  transition: all 0.25s;
+}
+
+.btn-outline-primary:hover {
+  background: #f8f8f8;
+}
+
+/* FORM ELEMENTS ---------------------------------*/
+.form-select {
+  border-radius: 8px;
+  border-color: #ddd;
+  box-shadow: none;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+/* ACTION BUTTONS --------------------------------*/
+.btn-primary.btn-lg,
+.btn-success.btn-lg {
+  border: none;
+  padding: 0.9rem 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary.btn-lg {
+  background: linear-gradient(90deg, #ff7b54, #ff6b6b);
+}
+
+.btn-primary.btn-lg:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
+}
+
+.btn-success.btn-lg {
+  background: linear-gradient(90deg, #4caf50, #43a047);
+}
+
+.btn-success.btn-lg:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+}
+
+/* SIDEBAR PRODUCT CARD --------------------------*/
+.card .card-img-top {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  object-fit: cover;
+}
+
+.card .card-body h6 {
+  font-weight: 500;
+  color: #333;
+}
+
+/* FACEBOOK COMMENTS CARD -----------------------*/
+.card h3 {
+  font-size: 1.4rem;
+  color: #555;
+  font-weight: 600;
+}
+
+/* RESPONSIVE ------------------------------------*/
+@media (max-width: 768px) {
+  main {
+    padding-top: 14vh;
+  }
+
+  .btn-lg {
+    font-size: 1rem;
+    padding: 0.7rem 1rem;
+  }
+}
+</style>
+<style>
+    .product-card .thumb {
+  height: 150px;              /* hoặc chiều cao bạn muốn */
+  background-size: cover;     /* phủ toàn bộ div */
+  background-position: center;
+  border-radius: 6px 6px 0 0;  /* bo góc đồng bộ với card */
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Hiệu ứng hover */
+.product-card:hover .thumb {
+  transform: scale(1.05);
+  filter: brightness(1.05);
+}
+
+/* Card chung */
+.product-card {
+  border: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.product-card:hover {
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+  transform: translateY(-3px);
+}
+</style>
+<style>
+    /* Khung gợi ý cuộn độc lập */
+.card-body.suggestion-list {
+  max-height: 400px;    /* chiều cao tùy ý */
+  overflow-y: auto;
+  scrollbar-width: thin; /* Firefox */
+}
+.card-body.suggestion-list::-webkit-scrollbar {
+  width: 6px;
+}
+.card-body.suggestion-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+/* Card product */
+.product-card {
+  background-size: cover;
+  background-position: center;
+  border: none;
+  position: relative;
+  height: 25vh !important;
+  display: flex;          /* bật flexbox */
+  flex-direction: column; /* sắp xếp theo cột */
+  justify-content: flex-end; /* đẩy nội dung xuống cuối */
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+/* Overlay tối giúp text nổi */
+.product-card .overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0.15));
+}
+
+.overlay-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+}
+
+.product-card .card-body {
+  position: relative;
+  z-index: 3;
+}
+.product-card .card-title,
+.product-card .card-text {
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(45, 41, 41, 0.6);
+}
+.product-card .card-title{
+    padding-top: 20%;
+    color: #d1c8c8ff !important;
+}
+.card-body{
+    margin-top:20px;
+}
 </style>

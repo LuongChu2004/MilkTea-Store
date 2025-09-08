@@ -273,6 +273,22 @@ if (isset($_GET['id'])) {
                     <option value="No Size">No Size</option>
                 </select>
             </div>
+            <div class="col-md-2">
+                    <select class="form-control" name="ice_levels[]">
+                        <option value="0%">0% Đá</option>
+                        <option value="25%">25% Đá</option>
+                        <option value="50%">50% Đá</option>
+                        <option value="100%">100% Đá</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-control" name="sugar_levels[]">
+                        <option value="0%">0% Đường</option>
+                        <option value="25%">25% Đường</option>
+                        <option value="50%">50% Đường</option>
+                        <option value="100%">100% Đường</option>
+                    </select>
+                </div>
             <div class="col-md-4">
                 <input type="number" class="form-control" name="prices[]" placeholder="Nhập giá..." min="0" step="1000">
             </div>

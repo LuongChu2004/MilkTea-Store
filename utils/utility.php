@@ -22,3 +22,10 @@ function getGet($key) {
 
 	return removeSpecialCharacter($value);
 }
+
+function getShoppingBagIcon($classes = '', $additionalAttributes = '') {
+    $defaultClasses = 'fas fa-shopping-bag';
+    $allClasses = trim($defaultClasses . ' ' . $classes);
+    
+    return '<i class="' . $allClasses . '" ' . $additionalAttributes . '></i>';
+}

@@ -1,12 +1,12 @@
 
 /* END MAIN TOP  */
 main{
-  padding-top: 200px;
+  padding-top: 50px;
 }
 
 main .container {
   width: 90%;
-  margin: 0px auto;
+  margin: px auto;
 }
 main section.search-quan {
   width: 100%;
@@ -441,6 +441,10 @@ footer .container .bottom{
   }
 }
 /* chương trình */
+#programCarousel img {
+    height: 50vh;       /* Chiều cao = 50% chiều cao màn hình */
+    object-fit: cover;  /* Cắt ảnh để lấp đầy khung mà không bị méo */
+}
 .program-carousel {
   margin: 20px 0;
   text-align: center;
@@ -452,7 +456,7 @@ footer .container .bottom{
 
 .program-carousel .carousel-item img {
   width: 100%;  /* Đảm bảo ảnh hiển thị đầy đủ */
-  height: 400px; /* Đặt chiều cao cho ảnh */
+  height: 600px; /* Đặt chiều cao cho ảnh */
   object-fit: cover;  /* Cắt ảnh cho phù hợp với khung */
 }
 .left-align {

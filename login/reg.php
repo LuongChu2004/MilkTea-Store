@@ -1,255 +1,199 @@
 <?php
-require_once('../database/config.php');
-require_once('../database/dbhelper.php');
+require "../layout/header.php";
+require_once __DIR__ . '/../utils/utility.php';
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    if (
+        !empty($_POST['name']) && !empty($_POST['username']) && !empty($_POST['password'])
+        && !empty($_POST['repassword']) && !empty($_POST['phone']) && !empty($_POST['email'])
+    ) {
+
+        $name = trim(strip_tags($_POST['name']));
+        $username = trim(strip_tags($_POST['username']));
+        $pass = trim(strip_tags($_POST['password']));
+        $repass = trim(strip_tags($_POST['repassword']));
+        $phone = trim(strip_tags($_POST['phone']));
+        $email = trim(strip_tags($_POST['email']));
+
+        // Regex kiểm tra mật khẩu
+        $password_pattern = "/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*.])[A-Za-z\d!@#$%^&*.]{8,20}$/";
+        if (!preg_match($password_pattern, $pass)) {
+            echo '<script>alert("Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt!"); window.location="reg.php";</script>';
+            exit();
+        }
+
+        // Kiểm tra nhập lại mật khẩu
+        if ($pass !== $repass) {
+            echo '<script>alert("Mật khẩu nhập lại không khớp!"); window.location="reg.php";</script>';
+            exit();
+        }
+
+        $con = mysqli_connect(HOST, USERNAME, PASSWORD, DATABASE);
+
+        // Kiểm tra tồn tại user/email
+        $stmt = $con->prepare("SELECT * FROM user WHERE username = ? OR email = ?");
+        $stmt->bind_param("ss", $username, $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            echo '<script>alert("Tài khoản hoặc Email đã được sử dụng!"); window.location="reg.php";</script>';
+            exit();
+        }
+
+        // Lưu mật khẩu raw (em đang làm theo DB sẵn) -> Gợi ý: dùng password_hash()
+        $stmt = $con->prepare("INSERT INTO user(hoten, username, password, phone, email) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $name, $username, $pass, $phone, $email);
+        $stmt->execute();
+
+        echo '<script>alert("Đăng ký thành công!"); window.location="login.php";</script>';
+        exit();
+    } else {
+        echo '<script>alert("Vui lòng nhập đủ thông tin!"); window.location="reg.php";</script>';
+        exit();
+    }
+}
 ?>
-<!DOCTYPE html>
-<html lang="en">
+<main>
+    <div class="container mt-5">
+        <div class="row justify-content-center" style="margin-top: 20vh;">
+            <div class="col-md-7">
+                <!-- Card Register -->
+                <div class="card shadow-lg border-0 rounded-4 animate__animated animate__fadeInUp">
+                    <div class="card-header bg-gradient bg-success text-white text-center rounded-top-4">
+                        <h4 class="mb-0"></i> Đăng ký tài khoản</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="POST" action="">
+                            <!-- Full name -->
+                            <div class="mb-3">
+                                <label for="name" class="form-label fw-semibold">Họ và tên</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-user"></i></span>
+                                    <input type="text" class="form-control" id="name" name="name" required
+                                        placeholder="Nhập họ và tên">
+                                </div>
+                            </div>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <!-- Popper JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <!-- Latest compiled JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="plugin/fontawesome/css/all.css">
-    <link rel="stylesheet" href="header.css">
-    <title>Đăng ký tài khoản</title>
-    <style>
-    /* Form container responsive giống login.php */
-    .register-form-container {
-        background: #fff;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
+                            <!-- Username -->
+                            <div class="mb-3">
+                                <label for="username" class="form-label fw-semibold">Tên đăng nhập</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-id-card"></i></span>
+                                    <input type="text" class="form-control" id="username" name="username" required
+                                        placeholder="Nhập tài khoản">
+                                </div>
+                            </div>
 
-    @media (max-width: 576px) {
-        .register-form-container {
-            padding: 20px 15px;
-        }
+                            <!-- Password -->
+                            <div class="mb-3">
+                                <label for="password" class="form-label fw-semibold">Mật khẩu</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control" id="password" name="password" required
+                                        placeholder="Mật khẩu">
+                                    <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <small class="text-muted">Ít nhất 8 ký tự, gồm chữ, số và ký tự đặc biệt</small>
+                            </div>
 
-        .register-form-container h1 {
-            font-size: 1.5rem;
-        }
-    }
-    </style>
-</head>
+                            <!-- Re-Password -->
+                            <div class="mb-3">
+                                <label for="repassword" class="form-label fw-semibold">Nhập lại mật khẩu</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-key"></i></span>
+                                    <input type="password" class="form-control" id="repassword" name="repassword"
+                                        required placeholder="Nhập lại mật khẩu">
+                                    <button type="button" class="btn btn-outline-secondary" id="toggleRePassword">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
 
-<body>
-    <!-- Bootstrap Navbar giống login.php -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="../index.php">
-                <img src="../images/logo.svg" alt="Logo" height="100">
-            </a>
+                            <!-- Phone -->
+                            <div class="mb-3">
+                                <label for="phone" class="form-label fw-semibold">Số điện thoại</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-phone"></i></span>
+                                    <input type="text" class="form-control" id="phone" name="phone" required
+                                        placeholder="Số điện thoại">
+                                </div>
+                            </div>
 
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+                            <!-- Email -->
+                            <div class="mb-3">
+                                <label for="email" class="form-label fw-semibold">Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" class="form-control" id="email" name="email" required
+                                        placeholder="Nhập email">
+                                </div>
+                            </div>
 
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../index.php">Trang chủ</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Thực đơn
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <?php
-                            $sql = "SELECT * FROM category";
-                            $result = executeResult($sql);
-                            foreach ($result as $item) {
-                                echo '<a class="dropdown-item" href="../thucdon.php?id_category=' . $item['id'] . '">' . $item['name'] . '</a>';
-                            }
-                            ?>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../about.php">Về chúng tôi</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../sendMail.php">Liên hệ</a>
-                    </li>
-                </ul>
+                            <!-- Submit -->
+                            <button type="submit" name="submit"
+                                class="btn btn-success w-100 py-2 fw-semibold shadow-sm register-btn">
+                                <i class="fas fa-user-plus me-2"></i> Đăng ký
+                            </button>
 
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../cart.php">
-                            <img src="../images/icon/cart.svg" alt="Cart" height="20">
-                            <?php
-                            $cart = [];
-                            if (isset($_COOKIE['cart'])) {
-                                $json = $_COOKIE['cart'];
-                                $cart = json_decode($json, true);
-                            }
-                            $count = 0;
-                            foreach ($cart as $item) {
-                                $count += $item['num'];
-                            }
-                            if ($count > 0) {
-                                echo '<span class="badge badge-primary ml-1">' . $count . '</span>';
-                            }
-                            ?>
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <?php
-                        if (isset($_COOKIE['username'])) {
-                            echo '<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
-                                . $_COOKIE['username'] . 
-                                '</a>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="changePass.php"><i class="fas fa-exchange-alt"></i> Đổi mật khẩu</a>
-                                    <a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
-                                </div>';
-                        } else {
-                            echo '<a class="nav-link" href="login.php">Đăng nhập</a>';
-                        }
-                        ?>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content responsive -->
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-12 col-sm-10 col-md-8 col-lg-6">
-                <div class="register-form-container">
-                    <form action="reg.php" method="POST">
-                        <h1 class="text-center mb-4">Đăng ký hệ thống</h1>
-
-                        <div class="form-group">
-                            <label for="name">Họ và tên:</label>
-                            <input type="text" name="name" id="name" class="form-control" placeholder="Họ và tên"
-                                required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="username">Tài khoản:</label>
-                            <input type="text" name="username" id="username" class="form-control"
-                                placeholder="Tài khoản" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="password">Mật khẩu:</label>
-                            <input type="password" name="password" id="password" class="form-control"
-                                placeholder="Mật khẩu" required>
-                            <small class="form-text text-muted">
-                                Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt
-                            </small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="repassword">Nhập lại mật khẩu:</label>
-                            <input type="password" name="repassword" id="repassword" class="form-control"
-                                placeholder="Nhập lại mật khẩu" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="phone">Số điện thoại:</label>
-                            <input type="text" name="phone" id="phone" class="form-control" placeholder="Số điện thoại"
-                                required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="email">Email:</label>
-                            <input type="email" name="email" id="email" class="form-control" placeholder="Email"
-                                required>
-                        </div>
-
-                        <div class="form-group">
-                            <button type="submit" name="submit" class="btn btn-primary btn-block">Đăng ký</button>
-                        </div>
-
-                        <div class="text-center mt-3">
-                            <p class="mb-0">Bạn đã có tài khoản? <a href="login.php">Đăng nhập</a></p>
-                        </div>
-                    </form>
+                            <!-- Extra -->
+                            <div class="text-center mt-3">
+                                <small class="text-muted">Bạn đã có tài khoản?
+                                    <a href="login.php" class="text-decoration-none fw-semibold">Đăng nhập ngay</a>
+                                </small>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</main>
 
-    <script>
-    // Bootstrap navbar sẽ tự động xử lý responsive
-    $(function() {
-        // Đảm bảo dropdown hoạt động
-        $('.dropdown-toggle').dropdown();
+<!-- CSS hiệu ứng -->
+<style>
+    .register-btn {
+        transition: all 0.3s ease-in-out;
+        border-radius: 50px;
+    }
+
+    .register-btn:hover {
+        background: linear-gradient(45deg, #198754, #20c997);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .form-control:focus {
+        border-color: #20c997;
+        box-shadow: 0 0 0 0.2rem rgba(32, 201, 151, .25);
+    }
+</style>
+
+<!-- JS Toggle password -->
+<script>
+    function togglePassword(inputId, iconBtn) {
+        const input = document.getElementById(inputId);
+        const icon = iconBtn.querySelector("i");
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        }
+    }
+
+    document.getElementById("togglePassword").addEventListener("click", function () {
+        togglePassword("password", this);
     });
-    </script>
 
-    <?php
-  require_once('../database/config.php');
-  require_once('../database/dbhelper.php');
-  if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    if (isset($_POST['submit']) && $_POST['name'] != "" && $_POST['username'] != "" && $_POST['password'] != "" && $_POST['phone'] != "" && $_POST['email'] != "") {
-      $name = $_POST['name'];
-      $username = $_POST['username'];
-      $pass = $_POST['password'];
-      $repass = $_POST['repassword'];
-      $phone = $_POST['phone'];
-      $email = $_POST['email'];
+    document.getElementById("toggleRePassword").addEventListener("click", function () {
+        togglePassword("repassword", this);
+    });
+</script>
 
-      // Kiểm tra mật khẩu có đủ yêu cầu không
-      $password_pattern = "/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*.])[A-Za-z\d!@#$%^&*.]{8,20}$/";
-      if (!preg_match($password_pattern, $pass)) {
-          echo '<script language="javascript">
-                  alert("Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt!");
-                  window.location = "reg.php";
-                </script>';
-          die();
-      }
-
-      // Kiểm tra trùng mật khẩu không
-      if ($pass != $repass) {
-          echo '<script language="javascript">
-                  alert("Nhập lại mật khẩu không trùng, vui lòng đăng ký lại!");
-                  window.location = "reg.php";
-                </script>';
-          die();
-      }
-
-      // Kiểm tra username và email đã tồn tại chưa
-      $sql = "SELECT * FROM user WHERE username = '$username' OR email = '$email'";
-      $conn = mysqli_connect(HOST, USERNAME, PASSWORD, DATABASE);
-      $result = mysqli_query($conn, $sql);
-      if (mysqli_num_rows($result) > 0) {
-          echo '<script language="javascript">
-                  alert("Tài khoản hoặc Email đã được sử dụng!");
-                  window.location = "reg.php";
-                </script>';
-          die();
-      }
-
-      // Thêm user vào cơ sở dữ liệu
-      $sql = 'INSERT INTO user(hoten, username, password, phone, email) VALUES ("' . $name . '", "' . $username . '", "' . $pass . '", "' . $phone . '", "' . $email . '")';
-      execute($sql);
-
-      echo '<script language="javascript">
-              alert("Bạn đăng ký thành công!");
-              window.location = "login.php";
-            </script>';
-  } else {
-      echo '<script language="javascript">
-              alert("Hãy nhập đủ thông tin!");
-              window.location = "reg.php";
-            </script>';
-  }
-  }
-  ?>
-
-</body>
-
-</html>
+<!-- Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
