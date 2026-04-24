@@ -1,1 +1,0 @@
-{"action":"update","id":"8","size":"S","num":"8","sugar":"0%","ice":"0%"}
