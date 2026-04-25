@@ -34,6 +34,7 @@ class AuthController extends Controller
 
         if ($user && $user->password === $password) { // Plain text fallback
             Auth::login($user);
+            session()->forget('admin_logged_in'); // Clear admin session
             return redirect('/');
         }
 

@@ -85,7 +85,7 @@
                             @endforeach
                         </td>
                         <td class="text-start">{{ $item->address }}</td>
-                        <td class="text-success">{{ \Carbon\Carbon::parse($item->order_date)->format('d/m/Y H:i') }}</td>
+                        <td class="text-success">{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y H:i') }}</td>
                         <td class="text-danger font-weight-bold">
                             {{ number_format($item->orderDetails->sum(function($d) { return $d->num * $d->price; }), 0, ',', '.') }} VNĐ
                         </td>

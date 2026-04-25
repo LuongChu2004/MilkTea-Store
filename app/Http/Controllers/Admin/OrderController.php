@@ -16,16 +16,16 @@ class OrderController extends Controller
             $query->where('id', $request->order_id);
         }
         if ($request->filled('date_from')) {
-            $query->whereDate('order_date', '>=', $request->date_from);
+            $query->whereDate('created_at', '>=', $request->date_from);
         }
         if ($request->filled('date_to')) {
-            $query->whereDate('order_date', '<=', $request->date_to);
+            $query->whereDate('created_at', '<=', $request->date_to);
         }
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        $orders = $query->orderBy('order_date', 'desc')->paginate(10);
+        $orders = $query->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.order.index', compact('orders'));
     }
 
@@ -39,7 +39,13 @@ class OrderController extends Controller
     {
         $request->validate(['status' => 'required']);
         $order = Order::findOrFail($id);
-        $order->update(['status' => $request->status]);
+        
+        $updateData = ['status' => $request->status];
+        if ($request->status === 'Hoàn thành') {
+            $updateData['payment_status'] = 'completed';
+        }
+
+        $order->update($updateData);
         return redirect('admin/order')->with('success', 'Cập nhật trạng thái đơn hàng thành công');
     }
 }

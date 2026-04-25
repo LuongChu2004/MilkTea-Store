@@ -37,8 +37,10 @@ Route::get('/register', [AuthController::class, 'showRegister']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Admin Routes (Protect this with middleware later)
-Route::prefix('admin')->group(function () {
+use App\Http\Middleware\AdminMiddleware;
+
+// Admin Routes
+Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () {
     Route::get('/', [DashboardController::class, 'index']);
     Route::resource('category', CategoryController::class);
     Route::resource('product', AdminProductController::class);
