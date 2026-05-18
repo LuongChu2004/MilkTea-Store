@@ -14,9 +14,15 @@
     
     <div class="card card-custom">
         <h3 class="text-center mb-4">📦 Quản lý Sản phẩm</h3>
-        <a href="{{ url('admin/product/create') }}" class="mb-3 d-inline-block">
-            <button class="btn btn-success">+ Thêm Sản Phẩm</button>
-        </a>
+        <div class="d-flex justify-content-between mb-3">
+            <a href="{{ url('admin/product/create') }}" class="d-inline-block">
+                <button class="btn btn-success">+ Thêm Sản Phẩm</button>
+            </a>
+            <form action="{{ url('admin/product') }}" method="GET" class="d-flex" style="max-width: 300px;">
+                <input type="text" name="search" class="form-control mr-2" placeholder="Tìm tên sản phẩm..." value="{{ request('search') }}">
+                <button type="submit" class="btn btn-primary" style="margin-left: 5px;">Tìm kiếm</button>
+            </form>
+        </div>
 
         <div class="table-responsive">
             <table class="table table-bordered table-hover text-center align-middle">
@@ -64,7 +70,7 @@
         </div>
 
         <div class="d-flex justify-content-center mt-3">
-            {{ $products->links() }}
+            {{ $products->appends(request()->query())->links() }}
         </div>
     </div>
 </div>

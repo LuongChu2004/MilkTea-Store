@@ -15,6 +15,13 @@
     <div class="card card-custom">
         <h3 class="text-center mb-4">👥 Quản lý người dùng</h3>
 
+        <div class="d-flex justify-content-end mb-3">
+            <form action="{{ url('admin/user') }}" method="GET" class="d-flex" style="max-width: 400px; width: 100%;">
+                <input type="text" name="search" class="form-control mr-2" placeholder="Tìm tên, username, SĐT, email..." value="{{ request('search') }}">
+                <button type="submit" class="btn btn-primary" style="margin-left: 5px;">Tìm kiếm</button>
+            </form>
+        </div>
+
         <div class="table-responsive">
             <table class="table table-bordered table-hover text-center align-middle">
                 <thead>
@@ -49,7 +56,7 @@
         </div>
 
         <div class="d-flex justify-content-center mt-3">
-            {{ $users->links() }}
+            {{ $users->appends(request()->query())->links() }}
         </div>
     </div>
 </div>

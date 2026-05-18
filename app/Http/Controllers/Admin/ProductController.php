@@ -10,9 +10,15 @@ use App\Models\ProductSize;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category', 'sizes')->orderBy('id', 'desc')->paginate(10);
+        $query = Product::with('category', 'sizes')->orderBy('id', 'desc');
+        
+        if ($request->has('search') && $request->search != '') {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        $products = $query->paginate(10);
         return view('admin.product.index', compact('products'));
     }
 
