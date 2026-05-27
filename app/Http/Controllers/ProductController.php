@@ -10,7 +10,11 @@ class ProductController extends Controller
 {
     public function show($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::with(['reviews.user' => function($q) {
+            $q->select('id', 'name', 'username');
+        }, 'reviews' => function($q) {
+            $q->latest();
+        }])->findOrFail($id);
         $sizes = ProductSize::where('product_id', $id)->get();
 
         $suggestedProducts = Product::where('id', '!=', $id)

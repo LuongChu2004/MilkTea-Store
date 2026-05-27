@@ -41,6 +41,9 @@
                                 <div class="input-group">
                                     <span class="input-group-text bg-light"><i class="fas fa-lock"></i></span>
                                     <input type="password" class="form-control" id="password" name="password" required
+                                        minlength="8"
+                                        pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*.])[A-Za-z\d!@#$%^&*.]{8,}"
+                                        title="Mật khẩu phải dài ít nhất 8 ký tự, chứa cả chữ cái, số và ký tự đặc biệt."
                                         placeholder="Mật khẩu">
                                     <button type="button" class="btn btn-outline-secondary" id="togglePassword">
                                         <i class="fas fa-eye"></i>
@@ -55,7 +58,9 @@
                                 <div class="input-group">
                                     <span class="input-group-text bg-light"><i class="fas fa-key"></i></span>
                                     <input type="password" class="form-control" id="repassword" name="password_confirmation"
-                                        required placeholder="Nhập lại mật khẩu">
+                                        required
+                                        minlength="8"
+                                        placeholder="Nhập lại mật khẩu">
                                     <button type="button" class="btn btn-outline-secondary" id="toggleRePassword">
                                         <i class="fas fa-eye"></i>
                                     </button>

@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ReviewController;
 
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/about', function() { return view('about'); });
@@ -30,6 +31,7 @@ Route::get('/checkout', [CheckoutController::class, 'index']);
 Route::post('/checkout', [CheckoutController::class, 'process']);
 Route::get('/checkout/vnpay_return', [CheckoutController::class, 'vnpayReturn']);
 Route::get('/history', [OrderController::class, 'history']);
+Route::post('/product/{id}/review', [ReviewController::class, 'store'])->middleware('auth');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
